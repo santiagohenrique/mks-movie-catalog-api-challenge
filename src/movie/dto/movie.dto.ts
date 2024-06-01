@@ -1,8 +1,9 @@
-import { IsUUID, IsString, IsInt, IsNumber } from "class-validator";
+import { IsString, IsUUID, IsInt, IsNumber } from 'class-validator';
 
-export class MovieResponseDto {
+export class MovieDto {
+
     @IsUUID()
-    id: string;
+    id?: string;
 
     @IsString()
     title: string;

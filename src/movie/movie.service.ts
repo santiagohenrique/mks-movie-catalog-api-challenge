@@ -1,10 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Movie } from './entity/movie.entity';
 import { Genre } from 'src/genre/entity/genre.entity';
-import { CreateMovieDto } from './dto/create-movie.dto';
-import { MovieResponseDto } from './dto/movie.response.dto';
+import { Repository } from 'typeorm';
+import { MovieDto } from './dto/movie.dto';
+import { Movie } from './entity/movie.entity';
 
 @Injectable()
 export class MovieService {
@@ -16,9 +15,9 @@ export class MovieService {
         private genreRepository: Repository<Genre>,
     ) {}
 
-    async findAll(): Promise<MovieResponseDto[]> {
-        const movies = this.movieRepository.find({ relations: ['genre'] });
-        return (await movies).map(movie => ({
+    async findAll(): Promise<MovieDto[]> {
+        const movies = await this.movieRepository.find({ relations: ['genre'] });
+        return movies.map(movie => ({
             id: movie.id,
             title: movie.title,
             synopsis: movie.synopsis,
@@ -28,8 +27,16 @@ export class MovieService {
         }));
     }
 
-    async create(createMovieDto: CreateMovieDto): Promise<Movie> {
-        const { genreId, ...movieData } = createMovieDto;
+    async findById(id: string): Promise<MovieDto> {
+        const movie = await this.movieRepository.findOne({ where: { id: id }, relations: ['genre'] });
+        if (!movie) {
+            throw new NotFoundException(`Movie with ID ${id} not found`);
+        }
+        return this.convertEntityToDto(movie);
+    }
+    
+    async create(createMovieRequest: MovieDto): Promise<Movie> {
+        const { genreId, ...movieData } = createMovieRequest;
 
         const genre = await this.genreRepository.findOne({ where: { id: genreId } });
         if (!genre) {
@@ -43,5 +50,51 @@ export class MovieService {
 
         return this.movieRepository.save(movie);
     }
+
+    async update(id: string, movieUpdateRequest: MovieDto): Promise<MovieDto>{
+        const movieToUpdate = await this.movieRepository.findOne({ where: { id: id }});
+
+        if(!movieToUpdate){
+            throw new NotFoundException(`Movie with ID ${id} not found`);
+        }
+
+        const genre = await this.genreRepository.findOne({ where: { id: movieUpdateRequest.genreId } });
+        if (!genre) {
+            throw new NotFoundException(`Genre with ID ${movieUpdateRequest.genreId} not found`);
+        }
+
+        movieToUpdate.title = movieUpdateRequest.title;
+        movieToUpdate.synopsis = movieUpdateRequest.synopsis;
+        movieToUpdate.genre = genre;
+        movieToUpdate.year = movieUpdateRequest.year;
+        movieToUpdate.score = movieUpdateRequest.score;
+
+        await this.movieRepository.save(movieToUpdate);
+
+        const updatedMovieDto = this.convertEntityToDto(movieToUpdate);
+
+        return updatedMovieDto;
+    }
+
+    async delete(id: string) {
+        const movie = await this.movieRepository.findOne({ where: { id: id }, relations: ['genre'] });
+        if(!movie){
+            throw new NotFoundException(`Movie with ID ${id} not found`);
+        }
+        await this.movieRepository.remove(movie)
+    }
+
+    private convertEntityToDto(movieEntity: Movie): MovieDto{
+        const movieDto: MovieDto = {
+            id: movieEntity.id,
+            title: movieEntity.title,
+            synopsis: movieEntity.synopsis,
+            genreId: movieEntity.genre.id,
+            year: movieEntity.year,
+            score: movieEntity.score,
+        };
+        return movieDto;
+    }
+
     
 }
