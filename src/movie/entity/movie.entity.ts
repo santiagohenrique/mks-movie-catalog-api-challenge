@@ -15,7 +15,7 @@ export class Movie{
 
     @ManyToOne(() => Genre, genre => genre.movies)
     @JoinColumn({ name: 'genre_id' })
-    genre: string
+    genre: Genre
 
     @Column({type: "integer"})
     year: number
