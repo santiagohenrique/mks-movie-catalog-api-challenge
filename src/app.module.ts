@@ -6,9 +6,12 @@ import { Movie } from './movie/entity/movie.entity';
 import { Genre } from './genre/entity/genre.entity';
 import { UserModule } from './user/user.module';
 import { User } from './user/entity/user.entity';
+import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -20,7 +23,7 @@ import { User } from './user/entity/user.entity';
       synchronize: true,
       logging: true
     }), 
-    MovieModule, GenreModule, UserModule],
+    MovieModule, GenreModule, UserModule, AuthModule],
   controllers: [],
   providers: [],
 })

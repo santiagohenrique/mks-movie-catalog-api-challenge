@@ -24,5 +24,18 @@ export class UserService {
 
     }
 
+    async findByUserName(username: string){
+        const userFound = await this.userRepository.findOne({where: { username: username}});
+        if (!userFound) {
+            return null;
+        }
+
+        return {
+            id: userFound.id,
+            username: userFound.username,
+            password: userFound.password,
+        };
+    }
+
 
 }
