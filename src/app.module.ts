@@ -4,6 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { GenreModule } from './genre/genre.module';
 import { Movie } from './movie/entity/movie.entity';
 import { Genre } from './genre/entity/genre.entity';
+import { UserModule } from './user/user.module';
+import { User } from './user/entity/user.entity';
 
 @Module({
   imports: [
@@ -14,11 +16,11 @@ import { Genre } from './genre/entity/genre.entity';
       username: 'mks-user',
       password: 'mks12345',
       database: 'mks-movie-api',
-      entities: [Movie, Genre],
+      entities: [Movie, Genre, User],
       synchronize: true,
       logging: true
     }), 
-    MovieModule, GenreModule],
+    MovieModule, GenreModule, UserModule],
   controllers: [],
   providers: [],
 })

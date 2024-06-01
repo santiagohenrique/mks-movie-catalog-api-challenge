@@ -51,23 +51,23 @@ export class MovieService {
         return this.movieRepository.save(movie);
     }
 
-    async update(id: string, movieUpdateRequest: MovieDto): Promise<MovieDto>{
+    async update(id: string, updateMovieRequest: MovieDto): Promise<MovieDto>{
         const movieToUpdate = await this.movieRepository.findOne({ where: { id: id }});
 
         if(!movieToUpdate){
             throw new NotFoundException(`Movie with ID ${id} not found`);
         }
 
-        const genre = await this.genreRepository.findOne({ where: { id: movieUpdateRequest.genreId } });
+        const genre = await this.genreRepository.findOne({ where: { id: updateMovieRequest.genreId } });
         if (!genre) {
-            throw new NotFoundException(`Genre with ID ${movieUpdateRequest.genreId} not found`);
+            throw new NotFoundException(`Genre with ID ${updateMovieRequest.genreId} not found`);
         }
 
-        movieToUpdate.title = movieUpdateRequest.title;
-        movieToUpdate.synopsis = movieUpdateRequest.synopsis;
+        movieToUpdate.title = updateMovieRequest.title;
+        movieToUpdate.synopsis = updateMovieRequest.synopsis;
         movieToUpdate.genre = genre;
-        movieToUpdate.year = movieUpdateRequest.year;
-        movieToUpdate.score = movieUpdateRequest.score;
+        movieToUpdate.year = updateMovieRequest.year;
+        movieToUpdate.score = updateMovieRequest.score;
 
         await this.movieRepository.save(movieToUpdate);
 
