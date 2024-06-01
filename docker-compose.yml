@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: mks-movie-api-db
+    ports:
+      - "5434:5432"
+    environment: 
+      POSTGRES_DB: mks-movie-api
+      POSTGRES_USER: mks-user
+      POSTGRES_PASSWORD: mks12345
