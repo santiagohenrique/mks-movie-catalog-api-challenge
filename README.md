@@ -4,8 +4,9 @@
 - Esta é uma API RESTful desenvolvida em NestJS para um catálogo de filmes, que utiliza TypeORM para interação com o banco de dados PostgreSQL, conforme solicitado pelo desafio proposto.
 
 ## Deploy
-- Deploy no Railway - Acesse a API em produção por meio do link:
-https://mks-movie-catalog-api-challenge-production.up.railway.app/api#/
+- Deploy no Railway - Acesse a documentação Swagger da aplicação
+<a href="https://mks-movie-catalog-api-challenge-production.up.railway.app/api#/" target="_blank"> clicando aqui</a>.
+
 
 
 ## Características
