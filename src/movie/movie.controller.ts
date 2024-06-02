@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, NotFoundException, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
-import { MovieDto } from './dto/movie.dto';
-import { MovieService } from './movie.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { Movie } from 'src/entities/movie.entity';
+import { MovieDto } from './dto/movie.dto';
+import { MovieService } from './movie.service';
 
 @UseGuards(AuthGuard)
 @Controller('movie')
@@ -32,13 +32,23 @@ export class MovieController {
         try {
             return await this.movieService.create(createMovieRequest);
         } catch (error) {
-            throw new HttpException(
-                {
-                    status: HttpStatus.BAD_REQUEST,
-                    error: error.message,
-                },
-                HttpStatus.BAD_REQUEST,
-            );
+            if (error instanceof NotFoundException) {
+                throw new HttpException(
+                    {
+                        status: HttpStatus.NOT_FOUND,
+                        error: error.message,
+                    },
+                    HttpStatus.NOT_FOUND,
+                );
+            } else {
+                throw new HttpException(
+                    {
+                        status: HttpStatus.BAD_REQUEST,
+                        error: error.message,
+                    },
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
         }
     }
 
@@ -52,7 +62,7 @@ export class MovieController {
                     status: HttpStatus.BAD_REQUEST,
                     error: error.message,
                 },
-                HttpStatus.BAD_REQUEST,
+                HttpStatus.NOT_FOUND,
             );
         }
     }
@@ -65,10 +75,10 @@ export class MovieController {
         } catch (error) {
             throw new HttpException(
                 {
-                    status: HttpStatus.BAD_REQUEST,
+                    status: HttpStatus.NOT_FOUND,
                     error: error.message,
                 },
-                HttpStatus.BAD_REQUEST,
+                HttpStatus.NOT_FOUND,
             );
         }
     }

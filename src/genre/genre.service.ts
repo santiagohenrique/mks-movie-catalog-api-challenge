@@ -41,8 +41,15 @@ export class GenreService {
     }
 
     async create(createGenreRequest: GenreDto): Promise<Genre> {
-        const genre = await this.genreRepository.create(createGenreRequest);
-        return this.genreRepository.save(genre);
+        const { name } = createGenreRequest;
+
+        const existingGenre = await this.genreRepository.findOne({ where: { name } });
+        if (existingGenre) {
+            throw new BadRequestException(`Genre with name '${name}' already exists.`);
+        }
+
+        const newGenre = this.genreRepository.create(createGenreRequest);
+        return this.genreRepository.save(newGenre);
     }
 
     async delete(id: string): Promise<void>{

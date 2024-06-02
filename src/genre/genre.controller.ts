@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { GenreDto } from './dto/genre.dto';
 import { GenreService } from './genre.service';
 import { AuthGuard } from 'src/auth/auth.guard';
@@ -33,7 +33,17 @@ export class GenreController {
     @HttpCode(HttpStatus.NO_CONTENT)
     @Delete("/:id")
     async delete(@Param('id') id): Promise<void>{
-        return await this.genreService.delete(id);
+        try{
+            return await this.genreService.delete(id);
+        } catch (error) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.NOT_FOUND,
+                    error: error.message,
+                },
+                HttpStatus.NOT_FOUND,
+            );
+        }
     }
 
 
