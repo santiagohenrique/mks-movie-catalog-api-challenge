@@ -21,7 +21,7 @@ export class AuthService {
     async signIn(authLoginRequest: AuthRequestDto): Promise<AuthResponseDto>{
         const foundUser = await this.userService.findByUserName(authLoginRequest.username);
         if(!foundUser || !bcryptCompareSync(authLoginRequest.password, foundUser.password) ){
-            throw new UnauthorizedException();
+            throw new UnauthorizedException('Credenciais inválidas. Verifique seu nome de usuário e senha.');
         }
 
         const payload = {

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, NotFoundException, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { MovieDto } from './dto/movie.dto';
 import { MovieService } from './movie.service';
 import { AuthGuard } from 'src/auth/auth.guard';
@@ -11,29 +11,66 @@ export class MovieController {
     constructor(private movieService: MovieService){};
 
     @Get()
-    async findAll(): Promise<MovieDto[]> {
-        return await this.movieService.findAll();
+    async findAll(
+        @Query('page') page: number = 1,
+        @Query('limit') limit: number = 10,
+    ): Promise<{ movies: MovieDto[], total: number }> {
+        return await this.movieService.findAll(page, limit);
     }
 
     @Get("/:id")
     async findById(@Param('id') id: string): Promise<MovieDto> {
-        return await this.movieService.findById(id);
+        try {
+            return await this.movieService.findById(id);
+        } catch (error) {
+            throw new NotFoundException(error.message);
+        }
     }
 
     @Post()
     async create(@Body() createMovieRequest: MovieDto): Promise<Movie> {
-        return await this.movieService.create(createMovieRequest);
+        try {
+            return await this.movieService.create(createMovieRequest);
+        } catch (error) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.BAD_REQUEST,
+                    error: error.message,
+                },
+                HttpStatus.BAD_REQUEST,
+            );
+        }
     }
 
     @Put("/:id")
     async update(@Param('id') id, @Body() updateMovieRequest: MovieDto): Promise<MovieDto>{
-        return await this.movieService.update(id, updateMovieRequest);
+        try {
+            return await this.movieService.update(id, updateMovieRequest);
+        } catch (error) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.BAD_REQUEST,
+                    error: error.message,
+                },
+                HttpStatus.BAD_REQUEST,
+            );
+        }
     }
 
     @HttpCode(HttpStatus.NO_CONTENT)
     @Delete("/:id")
     async delete(@Param('id') id): Promise<void>{
-        return await this.movieService.delete(id)
+        try {
+            await this.movieService.delete(id);
+        } catch (error) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.BAD_REQUEST,
+                    error: error.message,
+                },
+                HttpStatus.BAD_REQUEST,
+            );
+        }
     }
 
 

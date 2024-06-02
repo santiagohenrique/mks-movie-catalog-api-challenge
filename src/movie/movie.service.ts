@@ -15,16 +15,15 @@ export class MovieService {
         private genreRepository: Repository<Genre>,
     ) {}
 
-    async findAll(): Promise<MovieDto[]> {
-        const movies = await this.movieRepository.find({ relations: ['genre'] });
-        return movies.map(movie => ({
-            id: movie.id,
-            title: movie.title,
-            synopsis: movie.synopsis,
-            genreId: movie.genre.id, 
-            year: movie.year,
-            score: movie.score,
-        }));
+    async findAll(page: number = 1, limit: number = 10): Promise<{ movies: MovieDto[], total: number }> {
+        const [movies, total] = await this.movieRepository.findAndCount({
+            relations: ['genre'],
+            take: limit,
+            skip: (page - 1) * limit,
+        });
+
+        const movieDtos = movies.map(movie => this.convertEntityToDto(movie));
+        return { movies: movieDtos, total };
     }
 
     async findById(id: string): Promise<MovieDto> {
