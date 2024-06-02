@@ -34,7 +34,7 @@ export class MovieService {
         return this.convertEntityToDto(movie);
     }
     
-    async create(createMovieRequest: MovieDto): Promise<Movie> {
+    async create(createMovieRequest: MovieDto): Promise<MovieDto> {
         const { genreId, ...movieData } = createMovieRequest;
 
         const genre = await this.genreRepository.findOne({ where: { id: genreId } });
@@ -47,7 +47,8 @@ export class MovieService {
             genre: genre, 
         });
 
-        return this.movieRepository.save(movie);
+        const savedMovie = await this.movieRepository.save(movie);
+        return this.convertEntityToDto(savedMovie);
     }
 
     async update(id: string, updateMovieRequest: MovieDto): Promise<MovieDto>{
