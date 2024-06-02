@@ -1,6 +1,5 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, NotFoundException, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { Movie } from 'src/entities/movie.entity';
 import { MovieDto } from './dto/movie.dto';
 import { MovieService } from './movie.service';
 
@@ -28,7 +27,7 @@ export class MovieController {
     }
 
     @Post()
-    async create(@Body() createMovieRequest: MovieDto): Promise<Movie> {
+    async create(@Body() createMovieRequest: MovieDto): Promise<MovieDto> {
         try {
             return await this.movieService.create(createMovieRequest);
         } catch (error) {
@@ -57,13 +56,23 @@ export class MovieController {
         try {
             return await this.movieService.update(id, updateMovieRequest);
         } catch (error) {
-            throw new HttpException(
-                {
-                    status: HttpStatus.BAD_REQUEST,
-                    error: error.message,
-                },
-                HttpStatus.NOT_FOUND,
-            );
+            if (error instanceof NotFoundException) {
+                throw new HttpException(
+                    {
+                        status: HttpStatus.NOT_FOUND,
+                        error: error.message,
+                    },
+                    HttpStatus.NOT_FOUND,
+                );
+            } else {
+                throw new HttpException(
+                    {
+                        status: HttpStatus.BAD_REQUEST,
+                        error: error.message,
+                    },
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
         }
     }
 
@@ -73,13 +82,23 @@ export class MovieController {
         try {
             await this.movieService.delete(id);
         } catch (error) {
-            throw new HttpException(
-                {
-                    status: HttpStatus.NOT_FOUND,
-                    error: error.message,
-                },
-                HttpStatus.NOT_FOUND,
-            );
+            if (error instanceof NotFoundException) {
+                throw new HttpException(
+                    {
+                        status: HttpStatus.NOT_FOUND,
+                        error: error.message,
+                    },
+                    HttpStatus.NOT_FOUND,
+                );
+            } else {
+                throw new HttpException(
+                    {
+                        status: HttpStatus.BAD_REQUEST,
+                        error: error.message,
+                    },
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
         }
     }
 
