@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { MovieDto } from './dto/movie.dto';
-import { Movie } from './entity/movie.entity';
 import { MovieService } from './movie.service';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { Movie } from 'src/entities/movie.entity';
 
 @UseGuards(AuthGuard)
 @Controller('movie')

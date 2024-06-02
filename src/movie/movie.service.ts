@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Genre } from 'src/genre/entity/genre.entity';
+import { Movie } from 'src/entities/movie.entity';
 import { Repository } from 'typeorm';
 import { MovieDto } from './dto/movie.dto';
-import { Movie } from './entity/movie.entity';
+import { Genre } from 'src/entities/genre.entity';
 
 @Injectable()
 export class MovieService {

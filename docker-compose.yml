@@ -5,8 +5,8 @@ services:
     image: postgres:15
     container_name: mks-movie-api-db
     ports:
-      - "5434:5432"
+      - "${DB_PORT}:5432"
     environment: 
-      POSTGRES_DB: mks-movie-api
-      POSTGRES_USER: mks-user
-      POSTGRES_PASSWORD: mks12345
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}

@@ -1,5 +1,5 @@
-import { Genre } from "src/genre/entity/genre.entity";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Genre } from "./genre.entity";
 
 @Entity({name: 'movies'})
 export class Movie{

@@ -1,30 +1,23 @@
 import { Module } from '@nestjs/common';
-import { MovieModule } from './movie/movie.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { GenreModule } from './genre/genre.module';
-import { Movie } from './movie/entity/movie.entity';
-import { Genre } from './genre/entity/genre.entity';
-import { UserModule } from './user/user.module';
-import { User } from './user/entity/user.entity';
-import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
+import { GenreModule } from './genre/genre.module';
+import { MovieModule } from './movie/movie.module';
+import { UserModule } from './user/user.module';
+import { AppConfig, DatabaseConfig } from './config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ 
+      isGlobal: true,
+      load: [AppConfig, DatabaseConfig]
+    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get<string>('DB_HOST'),
-        port: configService.get<number>('DB_PORT'),
-        username: configService.get<string>('DB_USERNAME'),
-        password: configService.get<string>('DB_PASSWORD'),
-        database: configService.get<string>('DB_NAME'),
-        entities: [Movie, Genre, User],
-        synchronize: true,
-        logging: true
+        ...configService.get('database')
       }),
     }), 
     MovieModule, GenreModule, UserModule, AuthModule

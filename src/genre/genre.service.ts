@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryFailedError, Repository } from 'typeorm';
 import { GenreDto } from './dto/genre.dto';
-import { Genre } from './entity/genre.entity';
+import { Genre } from 'src/entities/genre.entity';
 
 @Injectable()
 export class GenreService {
