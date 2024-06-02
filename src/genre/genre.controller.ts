@@ -3,8 +3,11 @@ import { GenreDto } from './dto/genre.dto';
 import { GenreService } from './genre.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { Genre } from 'src/entities/genre.entity';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @UseGuards(AuthGuard)
+@ApiTags('genres')
+@ApiBearerAuth()
 @Controller('genre')
 export class GenreController {
 
@@ -16,7 +19,7 @@ export class GenreController {
     }
 
     @Get("/:id")
-    async findById(@Param('id') id): Promise<Genre>{
+    async findById(@Param('id') id: string): Promise<Genre>{
         return await this.genreService.findById(id);
     }
 
@@ -32,7 +35,7 @@ export class GenreController {
 
     @HttpCode(HttpStatus.NO_CONTENT)
     @Delete("/:id")
-    async delete(@Param('id') id): Promise<void>{
+    async delete(@Param('id') id: string): Promise<void>{
         try{
             return await this.genreService.delete(id);
         } catch (error) {

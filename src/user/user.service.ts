@@ -14,7 +14,6 @@ export class UserService {
         const usersList = await this.userRepository.find();
         return usersList.map(user => {
             const userDto: UserDto = {
-                id: user.id,
                 fullName: user.fullName,
                 username: user.username,
             };
@@ -29,7 +28,6 @@ export class UserService {
         }
 
         const userDto: UserDto = {
-            id: user.id,
             fullName: user.fullName,
             username: user.username,
         };

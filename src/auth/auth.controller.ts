@@ -1,7 +1,9 @@
 import { Body, Controller, HttpException, HttpStatus, Post } from '@nestjs/common';
-import { AuthRequestDto, AuthResponseDto } from './dto/auth.dto';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
+import { AuthRequestDto, AuthResponseDto } from './dto/auth.dto';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
 
@@ -22,6 +24,5 @@ export class AuthController {
             );
         }
     }
-
 
 }
