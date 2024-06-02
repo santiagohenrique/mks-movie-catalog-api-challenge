@@ -7,23 +7,28 @@ import { Genre } from './genre/entity/genre.entity';
 import { UserModule } from './user/user.module';
 import { User } from './user/entity/user.entity';
 import { AuthModule } from './auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5434,
-      username: 'mks-user',
-      password: 'mks12345',
-      database: 'mks-movie-api',
-      entities: [Movie, Genre, User],
-      synchronize: true,
-      logging: true
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get<string>('DB_HOST'),
+        port: configService.get<number>('DB_PORT'),
+        username: configService.get<string>('DB_USERNAME'),
+        password: configService.get<string>('DB_PASSWORD'),
+        database: configService.get<string>('DB_NAME'),
+        entities: [Movie, Genre, User],
+        synchronize: true,
+        logging: true
+      }),
     }), 
-    MovieModule, GenreModule, UserModule, AuthModule],
+    MovieModule, GenreModule, UserModule, AuthModule
+  ],
   controllers: [],
   providers: [],
 })
