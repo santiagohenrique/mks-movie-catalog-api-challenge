@@ -1,21 +1,18 @@
 # MKS Movie Catalog Challenge
 
 ## Descrição
-- Esta é uma API RESTful desenvolvida em NestJS para um catálogo de filmes, que utiliza TypeORM para interação com o banco de dados PostgreSQL, conforme solicitado pelo desafio proposto.
+- Esta é uma API RESTful desenvolvida em Nest.js para um catálogo de filmes, que utiliza TypeORM para interação com o banco de dados PostgreSQL, conforme solicitado pelo desafio proposto da MKS.
 
 ## Deploy
-- Deploy no Railway - Acesse a documentação Swagger da aplicação
-<a href="https://mks-movie-catalog-api-challenge-production.up.railway.app/api#/" target="_blank"> clicando aqui</a>.
+- A aplicação está hospedada no Railway. Acesse a documentação Swagger da aplicação [clicando aqui](https://mks-movie-catalog-api-challenge-production.up.railway.app/api#/).
+
 
 <img src="https://github.com/santiagohenrique/mks-movie-catalog-api-challenge/assets/88721828/4f6ac9f4-c76c-4245-a94a-79f37f47ada7"  width="600px"/>
 
-
 ## Características
-- Visualização de uma lista de Pokémon.
-- Integração com uma API externa.
-- Filtragem por nome e tipo.
-- Navegação entre páginas para visualizar mais Pokémon.
-
+- Visualização de uma lista de filmes.
+- Navegação entre páginas para visualizar mais filmes.
+- CRUD completo para filmes, gêneros e usuários.
 
 ## Endpoints
 ### Movies:
@@ -45,6 +42,7 @@
 ## Tecnologias Utilizadas
 - Nest.js
 - TypeScript
+- TypeORM
 - Docker
 - Swagger
 - PostgreSQL
@@ -52,6 +50,6 @@
 ## Como executar o programa
 - Certifique-se de ter o Node.js e o npm (gerenciador de pacotes do Node.js) instalados em seu sistema.
 - Clone o repositório.
-- Instale as dependências com o comando 'npm install'.
+- Instale as dependências com o comando `npm install`.
 - Configure as variáveis de ambiente no seu arquivo '.env'.
-- Baixe a imagem inserida no arquivo docker-compose.yml
+- Execute `docker-compose up` para iniciar o ambiente Docker.
